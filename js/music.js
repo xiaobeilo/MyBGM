@@ -9,6 +9,8 @@ var Music = (function () {
         this.f_play = $('#f-play');
         this.f_prev = $('#f-prev');
         this.f_next = $('#f-next');
+        this.spe = $('.spe>img');
+        this.spePre = {};
         this.lyric = [];
         this.PLAY = 1;
         this.PAUSE = -1;
@@ -22,7 +24,7 @@ var Music = (function () {
         this.list.on('click', 'li', function () {
             me.currentSong = parseInt($(this).data('idx'));
             me.playNew(me.currentSong);
-            me.upState();
+            // me.upState();
         });
         $(document).on('click', function (e) {
             e.target.nodeName !== 'H3' && me.list.hide();
@@ -86,9 +88,10 @@ var Music = (function () {
     };
     Music.prototype.playTo = function (dir) {
         var curIdx = 0;
-        Array.prototype.forEach.call(this.listLi, function (v, i, a) {
-            if (v.className === 'current') {
-                return curIdx = i;
+        this.listLi.each(function (idx, ele) {
+            if (ele.className === 'current') {
+                curIdx = idx;
+                return false;
             }
         });
         if (dir) {
@@ -111,14 +114,13 @@ var Music = (function () {
                     break;
             }
         }
-        this.upState();
         this.playNew(this.currentSong = curIdx);
     };
     Music.prototype.playNew = function (idx) {
         this.lyricContainer.html('正在载入...');
-        /*初始化歌词
-        切换封面
-        * */
+        this.spePre.moved = 0;
+        clearInterval(this.spePre.timer);
+        this.spe.attr('src', 'images/special/' + this.allSongData[this.currentSong].spe_en + '.jpg');
         var me = this;
         this.audio.src = this.allSongData[idx].qiniu_src;
         var lyricSrc = './data/songs_mayday/' + this.allSongData[idx].lrc_name + '.lrc';
@@ -187,19 +189,41 @@ var Music = (function () {
             case this.PLAY:
                 this.audio.play();
                 this.f_play.children().removeClass('glyphicon-play').addClass('glyphicon-pause');
+                this.speRoll();
                 break;
             /*播放音频 转动专辑 滚动歌词*/
             case this.PAUSE:
                 this.audio.pause();
+                this.speRoll();
                 this.f_play.children().removeClass('glyphicon-pause').addClass('glyphicon-play');
                 break;
-            case this.STOP:
         }
-        this.listLi.eq(this.currentSong).addClass('current').find('i').text('').addClass('glyphicon glyphicon-music').end()
-            .siblings('.current').removeClass('current').find('i').removeClass('glyphicon-music').text(function () {
-            return parseInt($(this).parents('li').data('idx')) + 1;
-        });
+        if ($('#m-list li.current').data('idx') !== this.currentSong) {
+            this.listLi.eq(this.currentSong).addClass('current').find('i').text('').addClass('glyphicon glyphicon-music').end()
+                .siblings('.current').removeClass('current').find('i').removeClass('glyphicon-music').text(function () {
+                return parseInt($(this).parents('li').data('idx')) + 1;
+            });
+        }
         this.listBtn.text(this.allSongData[this.currentSong].song_name);
+    };
+    Music.prototype.speRoll = function () {
+        var _this = this;
+        var interval = 100;
+        var max = 360;
+        var min = 0;
+        var moved = this.spePre.moved;
+        if (this.status === this.PLAY) {
+            this.spePre.timer = setInterval(function () {
+                console.log(_this.spePre.moved);
+                _this.spePre.moved = moved++;
+                _this.spe.css('transform', "rotate(" + moved + "deg)");
+                if (moved === max)
+                    moved = min;
+            }, interval);
+        }
+        else if (this.status === this.PAUSE) {
+            clearInterval(this.spePre.timer);
+        }
     };
     return Music;
 }());

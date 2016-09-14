@@ -15,6 +15,11 @@ interface songInfo{
     idx:number;
     song_name:string;
 }
+interface spePre{
+    timer : any;
+    spe_en:string;
+    moved:number;
+}
 class Music{
     allSongData:getData;
     currentSong:number=0;
@@ -26,6 +31,8 @@ class Music{
     f_play = $('#f-play');
     f_prev = $('#f-prev');
     f_next = $('#f-next');
+    spe = $('.spe>img');
+    spePre:spePre={};
     lyric:any[] = [];
     status:number;
     PLAY:number = 1;
@@ -41,7 +48,7 @@ class Music{
         this.list.on('click','li',function(){
             me.currentSong = parseInt($(this).data('idx'));
             me.playNew(me.currentSong);
-            me.upState();
+            // me.upState();
         });
         $(document).on('click',function(e){
             e.target.nodeName!=='H3'&&me.list.hide();
@@ -106,9 +113,10 @@ class Music{
     }
     playTo(dir?:string){
         let curIdx:number = 0;
-        Array.prototype.forEach.call(this.listLi,function(v,i,a){
-            if(v.className === 'current'){
-                return curIdx = i;
+        this.listLi.each(function(idx,ele){
+            if(ele.className === 'current'){
+                curIdx = idx;
+                return false;
             }
         });
        if(dir){
@@ -129,14 +137,13 @@ class Music{
                    break;
            }
        }
-       this.upState();
        this.playNew(this.currentSong = curIdx);
     }
     playNew(idx:number):void{
         this.lyricContainer.html('正在载入...');
-        /*初始化歌词
-        切换封面
-        * */
+        this.spePre.moved = 0;
+        clearInterval(this.spePre.timer);
+        this.spe.attr('src', 'images/special/' + this.allSongData[this.currentSong].spe_en + '.jpg');
         let me = this;
         this.audio.src = this.allSongData[idx].qiniu_src;
         let lyricSrc:string = './data/songs_mayday/' + this.allSongData[idx].lrc_name + '.lrc';
@@ -209,19 +216,39 @@ class Music{
             case this.PLAY:
                     this.audio.play();
                     this.f_play.children().removeClass('glyphicon-play').addClass('glyphicon-pause');
+                    this.speRoll();
                     break;
                 /*播放音频 转动专辑 滚动歌词*/
             case this.PAUSE:
                 this.audio.pause();
+                this.speRoll();
                 this.f_play.children().removeClass('glyphicon-pause').addClass('glyphicon-play');
                 break;
-            case this.STOP:
         }
-        this.listLi.eq(this.currentSong).addClass('current').find('i').text('').addClass('glyphicon glyphicon-music').end()
-            .siblings('.current').removeClass('current').find('i').removeClass('glyphicon-music').text(function(){
-            return parseInt($(this).parents('li').data('idx')) + 1;
-        });
+        if($('#m-list li.current').data('idx')!==this.currentSong){/*检测当前播放列表歌曲是否和真是播放歌曲一致*/
+            this.listLi.eq(this.currentSong).addClass('current').find('i').text('').addClass('glyphicon glyphicon-music').end()
+                .siblings('.current').removeClass('current').find('i').removeClass('glyphicon-music').text(function(){
+                return parseInt($(this).parents('li').data('idx')) + 1;
+            });
+        }
         this.listBtn.text(this.allSongData[this.currentSong].song_name);
+    }
+    speRoll(){
+        let interval: number = 100;
+        let max: number = 360;
+        let min: number = 0;
+        let moved = this.spePre.moved;
+        if (this.status === this.PLAY) {
+            this.spePre.timer = setInterval(()=> {
+                console.log(this.spePre.moved);
+
+                this.spePre.moved = moved++;
+                this.spe.css('transform', `rotate(${moved}deg)`);
+                if (moved === max) moved = min;
+            }, interval);
+        } else if (this.status === this.PAUSE) {
+            clearInterval(this.spePre.timer);
+        }
     }
 }
 new Music();
