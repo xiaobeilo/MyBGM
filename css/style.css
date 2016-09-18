@@ -2,16 +2,22 @@ html{
     overflow: hidden;
 }
 body{
-    background:url(../images/bgs/bg1.jpg);
+    background-image:url(../images/bgs/mayday/bg1.jpg);
     background-repeat:repeat-y;
     background-position: center top;
-    background-size:auto 100%;
+    background-size:auto auto;
+    -webkit-transition: linear0.8s;
+    -moz-transition:all linear 0.8s;
+    -ms-transition:all linear 0.8s;
+    -o-transition:all linear 0.8s;
+    transition:all linear 0.8s;
 }
-@media (min-width: 992px) {
+@media (max-width: 768px) {
     body{
-        background-size:auto auto;
+        background-size:auto 100%;
     }
 }
+
 /* 设置滚动条的样式 */
 ::-webkit-scrollbar {
     width: 15px;
@@ -115,8 +121,9 @@ ul{
 }
 #vol{
     display: block;
+    cursor: pointer;
 }
-@media (max-width:768px) {
+@media (max-width:768px){
     #vol{
         display: none;
     }
@@ -159,14 +166,11 @@ ul{
     -o-transition: transform linear 83.5ms ;
     transition: transform linear 83.5ms ;
     transform-origin: center center;
-    /*-webkit-animation:roll linear 10s infinite;*/
-    /*-o-animation:roll linear 10s infinite;*/
-    /*animation:roll linear 10s infinite;*/
 }
 #lyc>div{
     height:inherit;
-    width:100%;
-    max-width:300px;
+    width:50%;
+    min-width:300px;
     margin:0 auto;
     color:#fff;
     background-color:rgba(0,0,0,0.72);
@@ -235,8 +239,8 @@ ul{
     left:0;
     width:100%;
     margin:0;
+    cursor: pointer;
 }
-
 /*animation*/
 @keyframes roll {
     0%{

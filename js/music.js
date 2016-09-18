@@ -1,22 +1,29 @@
 /// <reference path="jquery.d.ts" />
 var Music = (function () {
-    function Music() {
+    function Music(type, count) {
         this.currentSong = 0;
         this.list = $('#m-list');
         this.listBtn = $('#m-box h3');
         this.lyricContainer = $('.lyc-container');
-        this.rate = $('#mainc .progress-bar');
+        this.rateBar = $('#mainc .progress-bar');
+        this.rate = $('#mainc .progress');
+        this.volBar = $('#vol .progress-bar');
+        this.vol = $('#vol .progress');
         this.f_play = $('#f-play');
         this.f_prev = $('#f-prev');
         this.f_next = $('#f-next');
         this.spe = $('.spe>img');
         this.spePre = {};
+        this.randomImg = {};
+        this.theme = {};
         this.lyric = [];
         this.PLAY = 1;
         this.PAUSE = -1;
         this.STOP = 0;
         this.audio = $('#audio')[0];
         var me = this;
+        this.theme.type = type;
+        this.theme.count = count;
         this.initList();
         this.listBtn.click(function () {
             $(this).next().toggle();
@@ -24,7 +31,6 @@ var Music = (function () {
         this.list.on('click', 'li', function () {
             me.currentSong = parseInt($(this).data('idx'));
             me.playNew(me.currentSong);
-            // me.upState();
         });
         $(document).on('click', function (e) {
             e.target.nodeName !== 'H3' && me.list.hide();
@@ -63,15 +69,28 @@ var Music = (function () {
                     me.lyricContainer.children().css('top', 130 - line.offsetTop + 'px');
                 }
             }
-            var w = me.rate.parent().width();
-            me.rate.width(now * w / time);
+            var w = me.rateBar.parent().width();
+            me.rateBar.width(now * w / time);
         });
+        this.rate.click(function (e) {
+            var r = e.offsetX / me.rate.width();
+            me.audio.currentTime = r * me.audio.duration;
+        });
+        this.vol.click(function (e) {
+            var w = me.vol.width();
+            var r = e.offsetX / w;
+            me.audio.volume = r;
+            me.volBar.width(r * w);
+        });
+        this.audio.onended = function () {
+            me.playTo('next');
+        };
     }
     Music.prototype.initList = function () {
         var me = this;
         $.ajax({
             type: 'GET',
-            url: 'data/mayday.php',
+            url: 'data/' + this.theme.type + '.php',
             dataType: 'json',
             success: function (data) {
                 me.allSongData = data;
@@ -120,18 +139,13 @@ var Music = (function () {
         this.lyricContainer.html('正在载入...');
         this.spePre.moved = 0;
         clearInterval(this.spePre.timer);
-        this.spe.attr('src', 'images/special/' + this.allSongData[this.currentSong].spe_en + '.jpg');
+        this.spe.attr('src', "images/special/" + this.theme.type + "/" + this.allSongData[this.currentSong].spe_en + ".jpg");
         var me = this;
         this.audio.src = this.allSongData[idx].qiniu_src;
-        var lyricSrc = './data/songs_mayday/' + this.allSongData[idx].lrc_name + '.lrc';
-        this.audio.oncanplay = function () {
-            me.getLyric(lyricSrc);
-            me.status = me.PLAY;
-            me.upState();
-        };
-        this.audio.onerror = function () {
-            //    提示
-        };
+        var lyricSrc = "./data/" + this.theme.type + "/" + this.allSongData[idx].lrc_name + ".lrc";
+        me.getLyric(lyricSrc);
+        me.status = me.PLAY;
+        me.upState();
     };
     Music.prototype.getLyric = function (url) {
         var me = this;
@@ -190,11 +204,13 @@ var Music = (function () {
                 this.audio.play();
                 this.f_play.children().removeClass('glyphicon-play').addClass('glyphicon-pause');
                 this.speRoll();
+                this.upBg();
                 break;
             /*播放音频 转动专辑 滚动歌词*/
             case this.PAUSE:
                 this.audio.pause();
                 this.speRoll();
+                this.upBg();
                 this.f_play.children().removeClass('glyphicon-pause').addClass('glyphicon-play');
                 break;
         }
@@ -214,7 +230,6 @@ var Music = (function () {
         var moved = this.spePre.moved;
         if (this.status === this.PLAY) {
             this.spePre.timer = setInterval(function () {
-                console.log(_this.spePre.moved);
                 _this.spePre.moved = moved++;
                 _this.spe.css('transform', "rotate(" + moved + "deg)");
                 if (moved === max)
@@ -225,7 +240,57 @@ var Music = (function () {
             clearInterval(this.spePre.timer);
         }
     };
+    Music.prototype.upBg = function () {
+        var me = this;
+        this.randomImg.inter = 5000;
+        if (!this.randomImg.timer) {
+            this.randomImg.timer = setInterval(function () {
+                var r = Math.floor(Math.random() * me.theme.count) + 1;
+                var img = new Image();
+                img.src = "images/bgs/" + me.theme.type + "/bg" + r + ".jpg";
+                console.log(img.src);
+                img.onload = function () {
+                    var url = "url(images/bgs/" + me.theme.type + "/bg" + r + ".jpg)";
+                    $(document.body).css('backgroundImage', url);
+                };
+            }, me.randomImg.inter);
+        }
+        else {
+            clearInterval(this.randomImg.timer);
+            this.randomImg.timer = null;
+        }
+    };
+    Music.prototype.reset = function (type, count) {
+        if (this.theme.type === type) {
+            return;
+        }
+        else {
+            this.theme.type = type;
+            this.theme.count = count;
+            $(document.body).css('backgroundImage', "url(images/bgs/" + this.theme.type + "/bg1.jpg)");
+            clearInterval(this.randomImg.timer);
+            this.randomImg.timer = null;
+            this.initList();
+        }
+    };
     return Music;
 }());
-new Music();
+var music = new Music('mayday', 20);
+$('#switch .dropdown-menu').delegate('a', 'click', function () {
+    var v = $(this).attr('href').slice(1);
+    switch (v) {
+        case 'dianyin':
+            music.reset('dianyin', 4);
+            break;
+        case 'mayday':
+            music.reset('mayday', 20);
+            break;
+        case 'xzz':
+            music.reset('xzz', 4);
+            break;
+        case 'jay':
+            music.reset('jay', 10);
+            break;
+    }
+});
 //# sourceMappingURL=music.js.map
