@@ -68,7 +68,6 @@ class Music{
             e.target.nodeName!=='H3'&&me.list.hide();
         });
         this.f_play.click(function():void{
-            let span = $(this).children();
             if(me.status === me.PLAY){
                 me.status = me.PAUSE;
             }else{
@@ -172,7 +171,8 @@ class Music{
         clearInterval(this.spePre.timer);
         this.spe.attr('src', `images/special/${this.theme.type}/${this.allSongData[this.currentSong].spe_en}.jpg`);
         let me = this;
-        this.audio.src = this.allSongData[idx].qiniu_src;
+        load(this.allSongData[idx].qiniu_src);
+        // this.audio.src = this.allSongData[idx].qiniu_src;
         let lyricSrc:string = `./data/${this.theme.type}/${this.allSongData[idx].lrc_name}.lrc`;
         me.getLyric(lyricSrc);
         me.status = me.PLAY;
@@ -280,7 +280,6 @@ class Music{
                 var r = Math.floor(Math.random()*me.theme.count)+1;
                 var img = new Image();
                 img.src = `images/bgs/${me.theme.type}/bg${r}.jpg`;
-                console.log(img.src);
                 img.onload = function() {
                     var url = `url(images/bgs/${me.theme.type}/bg${r}.jpg)`;
                     $(document.body).css('backgroundImage', url);
@@ -297,13 +296,48 @@ class Music{
         }else{
             this.theme.type = type;
             this.theme.count = count;
-            $(document.body).css('backgroundImage',`url(images/bgs/${this.theme.type}/bg1.jpg)`)
+            $(document.body).css('backgroundImage',`url(images/bgs/${this.theme.type}/bg1.jpg)`);
             clearInterval(this.randomImg.timer);
             this.randomImg.timer = null;
             this.initList();
         }
     }
 }
+var xhr = new XMLHttpRequest();
+var ac = new (window.AudioContext || window.webkitAudioContext)();
+var gainNode = ac[ac.createGain?'createGain':'createGainNode']();
+gainNode.connect(ac.destination);
+
+var source = null;
+var count:number = 0;
+function load(url:string){
+    var n:number = ++count;
+    source && source[source.stop?'stop':'noteOff']();
+    xhr.abort();
+    xhr.open('GET',url);
+    xhr.responseType = 'arraybuffer';
+    xhr.onload  = function(){
+        if(n!==count)return;
+        ac.decodeAudioData(xhr.response,function(buffer){
+            if(n!==count)return;
+            var bufferSouce = ac.createBufferSource();
+            bufferSouce.buffer = buffer;
+            bufferSouce.connect(gainNode);
+            bufferSouce[bufferSouce.start?'start':'noteOn'](0);
+            source = bufferSouce;
+        },function(err){
+            console.log(err);
+        });
+    };
+    xhr.send();
+}
+function changeVolume(percent){
+    gainNode.gain.value = percent * percent;
+}
+$('#volume').change(function(){
+    changeVolume(this.value/this.max);
+});
+
 var music = new Music('mayday',20);
 $('#switch .dropdown-menu').delegate('a','click',function(){
     let v = $(this).attr('href').slice(1);

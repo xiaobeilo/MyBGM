@@ -36,7 +36,6 @@ var Music = (function () {
             e.target.nodeName !== 'H3' && me.list.hide();
         });
         this.f_play.click(function () {
-            var span = $(this).children();
             if (me.status === me.PLAY) {
                 me.status = me.PAUSE;
             }
@@ -141,7 +140,8 @@ var Music = (function () {
         clearInterval(this.spePre.timer);
         this.spe.attr('src', "images/special/" + this.theme.type + "/" + this.allSongData[this.currentSong].spe_en + ".jpg");
         var me = this;
-        this.audio.src = this.allSongData[idx].qiniu_src;
+        load(this.allSongData[idx].qiniu_src);
+        // this.audio.src = this.allSongData[idx].qiniu_src;
         var lyricSrc = "./data/" + this.theme.type + "/" + this.allSongData[idx].lrc_name + ".lrc";
         me.getLyric(lyricSrc);
         me.status = me.PLAY;
@@ -248,7 +248,6 @@ var Music = (function () {
                 var r = Math.floor(Math.random() * me.theme.count) + 1;
                 var img = new Image();
                 img.src = "images/bgs/" + me.theme.type + "/bg" + r + ".jpg";
-                console.log(img.src);
                 img.onload = function () {
                     var url = "url(images/bgs/" + me.theme.type + "/bg" + r + ".jpg)";
                     $(document.body).css('backgroundImage', url);
@@ -275,6 +274,41 @@ var Music = (function () {
     };
     return Music;
 }());
+var xhr = new XMLHttpRequest();
+var ac = new (window.AudioContext || window.webkitAudioContext)();
+var gainNode = ac[ac.createGain ? 'createGain' : 'createGainNode']();
+gainNode.connect(ac.destination);
+var source = null;
+var count = 0;
+function load(url) {
+    var n = ++count;
+    source && source[source.stop ? 'stop' : 'noteOff']();
+    xhr.abort();
+    xhr.open('GET', url);
+    xhr.responseType = 'arraybuffer';
+    xhr.onload = function () {
+        if (n !== count)
+            return;
+        ac.decodeAudioData(xhr.response, function (buffer) {
+            if (n !== count)
+                return;
+            var bufferSouce = ac.createBufferSource();
+            bufferSouce.buffer = buffer;
+            bufferSouce.connect(gainNode);
+            bufferSouce[bufferSouce.start ? 'start' : 'noteOn'](0);
+            source = bufferSouce;
+        }, function (err) {
+            console.log(err);
+        });
+    };
+    xhr.send();
+}
+function changeVolume(percent) {
+    gainNode.gain.value = percent * percent;
+}
+$('#volume').change(function () {
+    changeVolume(this.value / this.max);
+});
 var music = new Music('mayday', 20);
 $('#switch .dropdown-menu').delegate('a', 'click', function () {
     var v = $(this).attr('href').slice(1);
