@@ -278,6 +278,10 @@ var xhr = new XMLHttpRequest();
 var ac = new (window.AudioContext || window.webkitAudioContext)();
 var gainNode = ac[ac.createGain ? 'createGain' : 'createGainNode']();
 gainNode.connect(ac.destination);
+var analyser = ac.createAnalyser();
+var size = 128;
+analyser.fftSize = size * 2;
+analyser.connect(gainNode);
 var source = null;
 var count = 0;
 function load(url) {
@@ -294,7 +298,7 @@ function load(url) {
                 return;
             var bufferSouce = ac.createBufferSource();
             bufferSouce.buffer = buffer;
-            bufferSouce.connect(gainNode);
+            bufferSouce.connect(analyser);
             bufferSouce[bufferSouce.start ? 'start' : 'noteOn'](0);
             source = bufferSouce;
         }, function (err) {
@@ -303,12 +307,45 @@ function load(url) {
     };
     xhr.send();
 }
+function visualizer() {
+    var arr = new Uint8Array(analyser.frequencyBinCount);
+    requestAnimationFrame = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame;
+    function v() {
+        analyser.getByteFrequencyData(arr);
+        draw(arr);
+        requestAnimationFrame(v);
+    }
+    requestAnimationFrame(v);
+}
+visualizer();
 function changeVolume(percent) {
     gainNode.gain.value = percent * percent;
 }
 $('#volume').change(function () {
     changeVolume(this.value / this.max);
 });
+var ctx = $('canvas')[0].getContext('2d');
+function resize() {
+    $('canvas').width($('#mainc').width()).height($('#mainc').height() - 5);
+    var line = ctx.createLinearGradient(0, 0, 0, 295);
+    line.addColorStop(0, 'red');
+    line.addColorStop(0.5, 'yellow');
+    line.addColorStop(1, 'green');
+    ctx.fillStyle = line;
+}
+$(window).resize(function () {
+    resize();
+});
+function draw(arr) {
+    ctx.clearRect(0, 0, 1920, 295);
+    var w = $('canvas').width() / size;
+    for (var i = 0; i < size; i++) {
+        var h = arr[i] / 256 * $('canvas').height();
+        ctx.fillRect(w * i, $('canvas').height() - h, w * 0.6, h);
+    }
+}
 var music = new Music('mayday', 20);
 $('#switch .dropdown-menu').delegate('a', 'click', function () {
     var v = $(this).attr('href').slice(1);
