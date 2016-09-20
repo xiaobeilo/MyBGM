@@ -171,7 +171,8 @@ class Music{
         clearInterval(this.spePre.timer);
         this.spe.attr('src', `images/special/${this.theme.type}/${this.allSongData[this.currentSong].spe_en}.jpg`);
         let me = this;
-        load(this.allSongData[idx].qiniu_src);
+        // load(this.allSongData[idx].qiniu_src);
+        mv.play(this.allSongData[idx].qiniu_src);
         // this.audio.src = this.allSongData[idx].qiniu_src;
         let lyricSrc:string = `./data/${this.theme.type}/${this.allSongData[idx].lrc_name}.lrc`;
         me.getLyric(lyricSrc);
@@ -303,55 +304,15 @@ class Music{
         }
     }
 }
-var xhr = new XMLHttpRequest();
-var ac = new (window.AudioContext || window.webkitAudioContext)();
-var gainNode = ac[ac.createGain?'createGain':'createGainNode']();
-gainNode.connect(ac.destination);
-var analyser = ac.createAnalyser();
 var size = 128;
-analyser.fftSize = size*2;
-analyser.connect(gainNode);
-var source = null;
-var count:number = 0;
-function load(url:string){
-    var n:number = ++count;
-    source && source[source.stop?'stop':'noteOff']();
-    xhr.abort();
-    xhr.open('GET',url);
-    xhr.responseType = 'arraybuffer';
-    xhr.onload  = function(){
-        if(n!==count)return;
-        ac.decodeAudioData(xhr.response,function(buffer){
-            if(n!==count)return;
-            var bufferSouce = ac.createBufferSource();
-            bufferSouce.buffer = buffer;
-            bufferSouce.connect(analyser);
-            bufferSouce[bufferSouce.start?'start':'noteOn'](0);
-            source = bufferSouce;
-        },function(err){
-            console.log(err);
-        });
-    };
-    xhr.send();
-}
-function visualizer(){
-    var arr = new Uint8Array(analyser.frequencyBinCount);
-    requestAnimationFrame = window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame||
-            window.mozRequestAnimationFrame;
-    function v(){
-        analyser.getByteFrequencyData(arr);
-        draw(arr);
-        requestAnimationFrame(v);
-    }
-    requestAnimationFrame(v);
-}
-visualizer();
-function changeVolume(percent){
-    gainNode.gain.value = percent * percent;
-}
+var mv = new MusicVisualizer({
+    size:size,
+    visualizer:draw
+});
+
+
 $('#volume').change(function(){
-    changeVolume(this.value/this.max);
+    mv.changeVolume(this.value/this.max);
 });
 var ctx = $('canvas')[0].getContext('2d');
 function resize(){
