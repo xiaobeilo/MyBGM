@@ -1,6 +1,7 @@
 /// <reference path="jquery.d.ts" />
 var SIZE = 32;
 var Music = (function () {
+    // audio = $('#audio')[0];
     function Music(type, count) {
         this.currentSong = 0;
         this.list = $('#m-list');
@@ -21,7 +22,6 @@ var Music = (function () {
         this.PLAY = 1;
         this.PAUSE = -1;
         this.STOP = 0;
-        this.audio = $('#audio')[0];
         var me = this;
         this.visualizer = new MusicVisualizer({
             size: SIZE,
@@ -148,8 +148,6 @@ var Music = (function () {
         this.spe.attr('src', "images/special/" + this.theme.type + "/" + this.allSongData[this.currentSong].spe_en + ".jpg");
         var me = this;
         this.visualizer.play(this.allSongData[idx].qiniu_src, false);
-        // load(this.allSongData[idx].qiniu_src);
-        // this.audio.src = this.allSongData[idx].qiniu_src;
         var lyricSrc = "./data/" + this.theme.type + "/" + this.allSongData[idx].lrc_name + ".lrc";
         me.getLyric(lyricSrc);
         me.status = me.PLAY;
@@ -209,14 +207,16 @@ var Music = (function () {
     Music.prototype.upState = function () {
         switch (this.status) {
             case this.PLAY:
-                this.audio.play();
+                // this.audio.play();
+                MusicVisualizer.play(this.visualizer);
                 this.f_play.children().removeClass('glyphicon-play').addClass('glyphicon-pause');
                 this.speRoll();
                 this.upBg();
                 break;
             /*播放音频 转动专辑 滚动歌词*/
             case this.PAUSE:
-                this.audio.pause();
+                MusicVisualizer.stop(this.visualizer);
+                // this.audio.pause();
                 this.speRoll();
                 this.upBg();
                 this.f_play.children().removeClass('glyphicon-pause').addClass('glyphicon-play');

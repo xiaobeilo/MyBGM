@@ -11,6 +11,7 @@ function MusicVisualizer(options){
 
     //通过audio标签创建MediaaudioElementSourceNode时使用的audio元素
     this.audio = new Audio();
+    this.audio.crossOrigin = 'anonymous';
     this.audioSource = MusicVisualizer.ac.createMediaElementSource(this.audio);
 
     //选择过的资源数的累计值
@@ -165,6 +166,7 @@ MusicVisualizer.prototype.play = function(path, isMobile/*是否移动设备*/){
         if(!isMobile){
             //self.audio.src = path;
             self.audio = new Audio(path);
+            self.audio.crossOrigin = 'anonymous';
             self.audioSource = MusicVisualizer.ac.createMediaElementSource(self.audio);
             //console.log(path);
 

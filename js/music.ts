@@ -54,14 +54,14 @@ class Music{
     PLAY:number = 1;
     PAUSE:number = -1;
     STOP:number = 0;
-    audio = $('#audio')[0];
+    // audio = $('#audio')[0];
     constructor(type:string,count:number){
         var me = this;
         this.visualizer = new MusicVisualizer({
-            size:SIZE;
+            size:SIZE,
             onended:function(){
                 me.playTo('next');
-            },visualizer:Render();
+            },visualizer:Render()
         });
         this.theme.type = type;
         this.theme.count = count;
@@ -181,9 +181,6 @@ class Music{
         this.spe.attr('src', `images/special/${this.theme.type}/${this.allSongData[this.currentSong].spe_en}.jpg`);
         let me = this;
         this.visualizer.play(this.allSongData[idx].qiniu_src,false);
-        // load(this.allSongData[idx].qiniu_src);
-        // this.audio.src = this.allSongData[idx].qiniu_src;
-
         let lyricSrc:string = `./data/${this.theme.type}/${this.allSongData[idx].lrc_name}.lrc`;
         me.getLyric(lyricSrc);
         me.status = me.PLAY;
@@ -247,14 +244,16 @@ class Music{
     upState(){
         switch (this.status){
             case this.PLAY:
-                    this.audio.play();
+                    // this.audio.play();
+                    MusicVisualizer.play(this.visualizer);
                     this.f_play.children().removeClass('glyphicon-play').addClass('glyphicon-pause');
                     this.speRoll();
                     this.upBg();
                     break;
                 /*播放音频 转动专辑 滚动歌词*/
             case this.PAUSE:
-                this.audio.pause();
+                MusicVisualizer.stop(this.visualizer);
+                // this.audio.pause();
                 this.speRoll();
                 this.upBg();
                 this.f_play.children().removeClass('glyphicon-pause').addClass('glyphicon-play');
