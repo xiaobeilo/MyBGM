@@ -1,14 +1,13 @@
 /// <reference path="jquery.d.ts" />
-var SIZE = 32;
+var SIZE = 64;
 var Music = (function () {
-    // audio = $('#audio')[0];
     function Music(type, count) {
         this.currentSong = 0;
         this.list = $('#m-list');
         this.listBtn = $('#m-box h3');
         this.lyricContainer = $('.lyc-container');
-        this.rateBar = $('#mainc .progress-bar');
-        this.rate = $('#mainc .progress');
+        this.rateBar = $('#timeProgress .progress-bar');
+        this.rate = $('#timeProgress');
         this.volBar = $('#vol .progress-bar');
         this.vol = $('#vol .progress');
         this.f_play = $('#f-play');
@@ -22,6 +21,7 @@ var Music = (function () {
         this.PLAY = 1;
         this.PAUSE = -1;
         this.STOP = 0;
+        this.audio = null;
         var me = this;
         this.visualizer = new MusicVisualizer({
             size: SIZE,
@@ -29,8 +29,16 @@ var Music = (function () {
                 me.playTo('next');
             }, visualizer: Render()
         });
-        this.theme.type = type;
-        this.theme.count = count;
+        // this.theme.type = type;
+        var theme = this.getTheme();
+        if (theme) {
+            this.theme.type = theme[2];
+            this.theme.count = theme[4];
+        }
+        else {
+            this.theme.type = 'mayday';
+            this.theme.count = 20;
+        }
         this.initList();
         this.listBtn.click(function () {
             $(this).next().toggle();
@@ -57,27 +65,6 @@ var Music = (function () {
         this.f_prev.click(function () {
             me.playTo('prev');
         });
-        this.audio.addEventListener('timeupdate', function () {
-            if (me.lyricContainer.children().length === 0) {
-                return;
-            }
-            var now = this.currentTime;
-            var time = this.duration;
-            var mTime = 0, sTime = 0, mNow = 0, sNow = 0;
-            var n = 0;
-            if (!me.lyric)
-                return;
-            for (var i = 0, l = me.lyric.length; i < l; i++) {
-                if (now > me.lyric[i][0] - 0.50) {
-                    var line = document.getElementById('line-' + i), prevLine = document.getElementById('line-' + (i > 0 ? i - 1 : i));
-                    prevLine.className = '';
-                    line.className = 'active';
-                    me.lyricContainer.children().css('top', 130 - line.offsetTop + 'px');
-                }
-            }
-            var w = me.rateBar.parent().width();
-            me.rateBar.width(now * w / time);
-        });
         this.rate.click(function (e) {
             var r = e.offsetX / me.rate.width();
             me.audio.currentTime = r * me.audio.duration;
@@ -88,9 +75,6 @@ var Music = (function () {
             me.audio.volume = r;
             me.volBar.width(r * w);
         });
-        this.audio.onended = function () {
-            me.playTo('next');
-        };
     }
     Music.prototype.initList = function () {
         var me = this;
@@ -142,12 +126,47 @@ var Music = (function () {
         this.playNew(this.currentSong = curIdx);
     };
     Music.prototype.playNew = function (idx) {
-        this.lyricContainer.html('正在载入...');
+        this.lyricContainer.html('<div>正在载入...</div>');
         this.spePre.moved = 0;
         clearInterval(this.spePre.timer);
         this.spe.attr('src', "images/special/" + this.theme.type + "/" + this.allSongData[this.currentSong].spe_en + ".jpg");
         var me = this;
         this.visualizer.play(this.allSongData[idx].qiniu_src, false);
+        this.audio = this.visualizer.audio;
+        this.audio.addEventListener('timeupdate', function () {
+            if (me.lyricContainer.children().length === 0) {
+                return;
+            }
+            var now = this.currentTime;
+            var time = this.duration;
+            var mTime = 0, sTime = 0, mNow = 0, sNow = 0;
+            var n = 0;
+            var w = me.rateBar.parent().width();
+            me.rateBar.width(now * w / time);
+            if (!me.lyric)
+                return;
+            for (var i = 0, l = me.lyric.length; i < l; i++) {
+                if (now > me.lyric[i][0] - 0.50) {
+                    // var line = document.getElementById('line-' + i),
+                    //     prevLine = document.getElementById('line-' + (i > 0 ? i - 1 : i));
+                    var line1 = document.querySelectorAll('[data-line="' + i + '"]')[0];
+                    var line2 = document.querySelectorAll('[data-line="' + i + '"]')[1];
+                    var prevLine1 = line1.previousElementSibling;
+                    var prevLine2 = line2.previousElementSibling;
+                    if (prevLine1)
+                        prevLine1.className = '';
+                    if (prevLine2)
+                        prevLine2.className = '';
+                    line1.className = 'active';
+                    line2.className = 'active';
+                    me.lyricContainer.children().css('top', 130 - line1.offsetTop + 'px');
+                    me.lyricContainer.children().css('top', 130 - line2.offsetTop + 'px');
+                }
+            }
+        });
+        this.audio.onended = function () {
+            me.playTo('next');
+        };
         var lyricSrc = "./data/" + this.theme.type + "/" + this.allSongData[idx].lrc_name + ".lrc";
         me.getLyric(lyricSrc);
         me.status = me.PLAY;
@@ -160,6 +179,10 @@ var Music = (function () {
             type: 'GET',
             success: function (data) {
                 parseLyric(data.trim());
+            },
+            error: function () {
+                me.lyricContainer.html('<div> sorry,暂未提供歌词</div>');
+                me.lyric = null;
             }
         });
         function parseLyric(text) {
@@ -199,7 +222,10 @@ var Music = (function () {
             var ul = document.createElement('ul');
             var template = '';
             for (var i = 0; i < lyric.length; i++) {
-                template += "\n                <li id=\"line-" + i + "\">" + lyric[i][1] + "</li>\n                ";
+                // template += `
+                // <li id="line-${i}">${lyric[i][1]}</li>
+                // `;
+                template += "\n                <li data-line=\"" + i + "\">" + lyric[i][1] + "</li>\n                ";
             }
             me.lyricContainer.html('<ul>' + template + '</ul>');
         }
@@ -233,15 +259,14 @@ var Music = (function () {
     Music.prototype.speRoll = function () {
         var _this = this;
         var interval = 100;
-        var max = 360;
-        var min = 0;
+        // let max: number = 360;
+        // let min: number = 0;
         var moved = this.spePre.moved;
         if (this.status === this.PLAY) {
             this.spePre.timer = setInterval(function () {
                 _this.spePre.moved = moved++;
                 _this.spe.css('transform', "rotate(" + moved + "deg)");
-                if (moved === max)
-                    moved = min;
+                // if (moved === max) moved = min;
             }, interval);
         }
         else if (this.status === this.PAUSE) {
@@ -267,13 +292,20 @@ var Music = (function () {
             this.randomImg.timer = null;
         }
     };
-    Music.prototype.reset = function (type, count) {
-        if (this.theme.type === type) {
+    Music.prototype.getTheme = function () {
+        var str = window.location.hash.slice();
+        var reg = /(#type=)([^&]+)(&count=)(\d+)/i;
+        var result = str.match(reg);
+        return result;
+    };
+    Music.prototype.reset = function () {
+        var theme = this.getTheme();
+        if (this.theme.type === theme[2]) {
             return;
         }
         else {
-            this.theme.type = type;
-            this.theme.count = count;
+            this.theme.type = theme[2];
+            this.theme.count = theme[4];
             $(document.body).css('backgroundImage', "url(images/bgs/" + this.theme.type + "/bg1.jpg)");
             clearInterval(this.randomImg.timer);
             this.randomImg.timer = null;
@@ -288,20 +320,14 @@ var ctx = canvas.getContext('2d');
 var HEIGHT;
 var WIDTH;
 var cw;
-function init() {
-    HEIGHT = $('#mainc').height();
-    WIDTH = $('#mainc').width();
-    canvas.height = HEIGHT;
-    canvas.width = WIDTH;
-}
 var ARR = [];
 ARR.dotMode = 'random';
 function getArr() {
     ARR.length = 0;
     ARR.linearGradient = ctx.createLinearGradient(0, 295, 0, 0);
-    ARR.linearGradient.addColorStop(0, 'green');
-    ARR.linearGradient.addColorStop(0.5, '#ff0');
-    ARR.linearGradient.addColorStop(1, '#f00');
+    ARR.linearGradient.addColorStop(0, '#5435E8');
+    ARR.linearGradient.addColorStop(0.8, '#8617F4');
+    ARR.linearGradient.addColorStop(1, '#C62F2F');
     for (var i = 0; i < SIZE; i++) {
         var x = random(0, WIDTH), y = random(0, HEIGHT), color = "rgba(" + random(100, 250) + "," + random(50, 250) + "," + random(50, 100) + ",0)", ran = random(1, 8) * 0.2;
         ARR.push({
@@ -316,6 +342,17 @@ function getArr() {
         });
     }
 }
+function init() {
+    var winH = $(window).height();
+    $('#mainc').height(winH * 2 / 5).css('top', -winH * 2 / 5);
+    HEIGHT = $('#mainc').height();
+    WIDTH = $('#mainc').width();
+    SIZE = WIDTH > 768 ? 64 : 32;
+    canvas.height = HEIGHT;
+    canvas.width = WIDTH;
+    getArr();
+}
+init();
 $(window).resize(init);
 Render.type = 'Column';
 function random(min, max) {
@@ -373,20 +410,7 @@ function Render() {
 }
 var music = new Music('mayday', 20);
 $('#switch .dropdown-menu').delegate('a', 'click', function () {
-    var v = $(this).attr('href').slice(1);
-    switch (v) {
-        case 'dianyin':
-            music.reset('dianyin', 4);
-            break;
-        case 'mayday':
-            music.reset('mayday', 20);
-            break;
-        case 'xzz':
-            music.reset('xzz', 4);
-            break;
-        case 'jay':
-            music.reset('jay', 10);
-            break;
-    }
+    window.location.hash = $(this).attr('href');
+    music.reset();
 });
 //# sourceMappingURL=music.js.map

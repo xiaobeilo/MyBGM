@@ -29,7 +29,7 @@ interface theme{
     count:number;
 }
 
-var SIZE =32;
+var SIZE =64;
 
 class Music{
     allSongData:getData;
@@ -38,8 +38,8 @@ class Music{
     listLi:any;
     listBtn = $('#m-box h3');
     lyricContainer = $('.lyc-container');
-    rateBar = $('#mainc .progress-bar');
-    rate = $('#mainc .progress');
+    rateBar = $('#timeProgress .progress-bar');
+    rate = $('#timeProgress');
     volBar = $('#vol .progress-bar');
     vol = $('#vol .progress');
     f_play = $('#f-play');
@@ -54,7 +54,7 @@ class Music{
     PLAY:number = 1;
     PAUSE:number = -1;
     STOP:number = 0;
-    // audio = $('#audio')[0];
+    audio = null;
     constructor(type:string,count:number){
         var me = this;
         this.visualizer = new MusicVisualizer({
@@ -63,8 +63,15 @@ class Music{
                 me.playTo('next');
             },visualizer:Render()
         });
-        this.theme.type = type;
-        this.theme.count = count;
+        // this.theme.type = type;
+        var theme = this.getTheme();
+        if(theme){
+            this.theme.type = theme[2];
+            this.theme.count = theme[4];
+        }else{
+            this.theme.type = 'mayday';
+            this.theme.count = 20;
+        }
         this.initList();
         this.listBtn.click(function(){
             $(this).next().toggle();
@@ -90,27 +97,6 @@ class Music{
         this.f_prev.click(function(){
             me.playTo('prev');
         });
-        this.audio.addEventListener('timeupdate',function(){
-            if(me.lyricContainer.children().length===0){
-                return;
-            }
-            var now:number = this.currentTime;
-                    var time:number = this.duration;
-                    var mTime:number = 0,sTime:number =0,mNow:number = 0,sNow:number = 0;
-                    var n:number = 0;
-                    if (!me.lyric) return;
-                    for (var i = 0, l = me.lyric.length; i < l; i++) {
-                        if (now > me.lyric[i][0] - 0.50) {
-                            var line = document.getElementById('line-' + i),
-                                prevLine = document.getElementById('line-' + (i > 0 ? i - 1 : i));
-                            prevLine.className = '';
-                    line.className = 'active';
-                    me.lyricContainer.children().css('top',130 - line.offsetTop + 'px');
-                }
-            }
-            let w:number = me.rateBar.parent().width();
-            me.rateBar.width(now*w/time);
-        });
         this.rate.click(function(e){
             let r = e.offsetX/me.rate.width();
             me.audio.currentTime = r*me.audio.duration;
@@ -121,9 +107,7 @@ class Music{
             me.audio.volume = r;
             me.volBar.width(r*w);
         });
-        this.audio.onended = function(){
-            me.playTo('next');
-        };
+
     }
     initList(){
         var me = this;
@@ -175,12 +159,45 @@ class Music{
        this.playNew(this.currentSong = curIdx);
     }
     playNew(idx:number):void{
-        this.lyricContainer.html('正在载入...');
+        this.lyricContainer.html('<div>正在载入...</div>');
         this.spePre.moved = 0;
         clearInterval(this.spePre.timer);
         this.spe.attr('src', `images/special/${this.theme.type}/${this.allSongData[this.currentSong].spe_en}.jpg`);
         let me = this;
         this.visualizer.play(this.allSongData[idx].qiniu_src,false);
+        this.audio = this.visualizer.audio;
+        this.audio.addEventListener('timeupdate',function(){
+            if(me.lyricContainer.children().length===0){
+                return;
+            }
+            var now:number = this.currentTime;
+            var time:number = this.duration;
+            var mTime:number = 0,sTime:number =0,mNow:number = 0,sNow:number = 0;
+            var n:number = 0;
+            let w:number = me.rateBar.parent().width();
+            me.rateBar.width(now*w/time);
+            if (!me.lyric) return;
+            for (var i = 0, l = me.lyric.length; i < l; i++) {
+                if (now > me.lyric[i][0] - 0.50) {
+                    // var line = document.getElementById('line-' + i),
+                    //     prevLine = document.getElementById('line-' + (i > 0 ? i - 1 : i));
+                    var line1 = document.querySelectorAll('[data-line="'+i+'"]')[0];
+                    var line2 = document.querySelectorAll('[data-line="'+i+'"]')[1];
+                    var prevLine1 = line1.previousElementSibling;
+                    var prevLine2 = line2.previousElementSibling;
+                    if(prevLine1) prevLine1.className = '';
+                    if(prevLine2) prevLine2.className = '';
+                    line1.className = 'active';
+                    line2.className = 'active';
+                    me.lyricContainer.children().css('top',130 - line1.offsetTop + 'px');
+                    me.lyricContainer.children().css('top',130 - line2.offsetTop + 'px');
+                }
+            }
+
+        });
+        this.audio.onended = function(){
+            me.playTo('next');
+        };
         let lyricSrc:string = `./data/${this.theme.type}/${this.allSongData[idx].lrc_name}.lrc`;
         me.getLyric(lyricSrc);
         me.status = me.PLAY;
@@ -193,6 +210,10 @@ class Music{
             type:'GET',
             success:function(data){
                 parseLyric(data.trim());
+            },
+            error:function () {
+                me.lyricContainer.html('<div> sorry,暂未提供歌词</div>');
+                me.lyric = null;
             }
         });
         function parseLyric(text:string):void{
@@ -234,8 +255,11 @@ class Music{
             var ul = document.createElement('ul');
             let template:string = '';
             for(let i=0;i<lyric.length;i++){
+                // template += `
+                // <li id="line-${i}">${lyric[i][1]}</li>
+                // `;
                 template += `
-                <li id="line-${i}">${lyric[i][1]}</li>
+                <li data-line="${i}">${lyric[i][1]}</li>
                 `;
             }
             me.lyricContainer.html('<ul>'+template+'</ul>');
@@ -269,14 +293,14 @@ class Music{
     }
     speRoll(){
         let interval: number = 100;
-        let max: number = 360;
-        let min: number = 0;
+        // let max: number = 360;
+        // let min: number = 0;
         let moved = this.spePre.moved;
         if (this.status === this.PLAY) {
             this.spePre.timer = setInterval(()=> {
                 this.spePre.moved = moved++;
                 this.spe.css('transform', `rotate(${moved}deg)`);
-                if (moved === max) moved = min;
+                // if (moved === max) moved = min;
             }, interval);
         } else if (this.status === this.PAUSE) {
             clearInterval(this.spePre.timer);
@@ -300,12 +324,19 @@ class Music{
             this.randomImg.timer = null;
         }
     }
-    reset(type:string,count:number){
-        if(this.theme.type === type){
+    getTheme():any{
+        var str = window.location.hash.slice();
+        var reg = /(#type=)([^&]+)(&count=)(\d+)/i;
+        var result = str.match(reg);
+        return result;
+    }
+    reset(){
+        var theme = this.getTheme();
+        if(this.theme.type === theme[2]){
             return;
         }else{
-            this.theme.type = type;
-            this.theme.count = count;
+            this.theme.type = theme[2];
+            this.theme.count = theme[4];
             $(document.body).css('backgroundImage',`url(images/bgs/${this.theme.type}/bg1.jpg)`);
             clearInterval(this.randomImg.timer);
             this.randomImg.timer = null;
@@ -320,20 +351,15 @@ var ctx = canvas.getContext('2d');
 var HEIGHT:number;
 var WIDTH:number;
 var cw:number;
-function init(){
-    HEIGHT = $('#mainc').height();
-    WIDTH = $('#mainc').width();
-    canvas.height = HEIGHT;
-    canvas.width = WIDTH;
-}
+
 var ARR = [];
 ARR.dotMode = 'random';
 function getArr(){
     ARR.length = 0;
     ARR.linearGradient = ctx.createLinearGradient(0,295,0,0);
-    ARR.linearGradient.addColorStop(0,'green');
-    ARR.linearGradient.addColorStop(0.5,'#ff0');
-    ARR.linearGradient.addColorStop(1,'#f00');
+    ARR.linearGradient.addColorStop(0,'#5435E8');
+    ARR.linearGradient.addColorStop(0.8,'#8617F4');
+    ARR.linearGradient.addColorStop(1,'#C62F2F');
     for(let i=0;i<SIZE;i++){
         var x = random(0,WIDTH),
             y = random(0,HEIGHT),
@@ -352,6 +378,17 @@ function getArr(){
 
     }
 }
+function init(){
+    var winH = $(window).height();
+    $('#mainc').height(winH*2/5).css('top',-winH*2/5);
+    HEIGHT = $('#mainc').height();
+    WIDTH = $('#mainc').width();
+    SIZE = WIDTH>768?64:32;
+    canvas.height = HEIGHT;
+    canvas.width = WIDTH;
+    getArr();
+}
+init();
 $(window).resize(init);
 Render.type = 'Column';
 function random(min:number,max:number):number{
@@ -413,19 +450,6 @@ function Render(){
 
 var music = new Music('mayday',20);
 $('#switch .dropdown-menu').delegate('a','click',function(){
-    let v = $(this).attr('href').slice(1);
-    switch (v){
-        case 'dianyin':
-            music.reset('dianyin',4);
-            break;
-        case 'mayday':
-            music.reset('mayday',20);
-            break;
-        case 'xzz':
-            music.reset('xzz',4);
-            break;
-        case 'jay':
-            music.reset('jay',10);
-            break;
-    }
+    window.location.hash = $(this).attr('href');
+    music.reset();
 });
