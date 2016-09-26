@@ -12,7 +12,4 @@ $(window).load(function(){
 }).resize(function(){
     $('#mySwipe').css('top',$(this).innerHeight()/2-150);
     $('body').height($(this).innerHeight());
-
 })
-// $('li.current').find('span').text('').addClass('glyphicon glyphicon-music');
-/*记得设置data-i属性*/

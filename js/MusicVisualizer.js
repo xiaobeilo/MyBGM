@@ -16,7 +16,7 @@ function MusicVisualizer(options){
 
     //选择过的资源数的累计值
     this.count = 0;
-
+    
     //播完后的回调
     this.onended = options.onended;
 

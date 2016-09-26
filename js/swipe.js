@@ -5,7 +5,6 @@
  * Copyright 2013, MIT License
  *
 */
-
 function Swipe(container, options) {
 
   "use strict";

@@ -161,6 +161,8 @@ class Music{
     playNew(idx:number):void{
         this.lyricContainer.html('<div>正在载入...</div>');
         this.spePre.moved = 0;
+        this.lyric = null;
+        clearInterval(this.randomImg.timer);this.randomImg.timer = null;
         clearInterval(this.spePre.timer);
         this.spe.attr('src', `images/special/${this.theme.type}/${this.allSongData[this.currentSong].spe_en}.jpg`);
         let me = this;
@@ -308,7 +310,7 @@ class Music{
     }
     upBg(){
         let me = this;
-        this.randomImg.inter = 5000;
+        this.randomImg.inter = 30000;
         if(!this.randomImg.timer){
             this.randomImg.timer = setInterval(function(){
                 var r = Math.floor(Math.random()*me.theme.count)+1;
@@ -389,7 +391,7 @@ function init(){
     getArr();
 }
 init();
-$(window).resize(init);
+// $(window).resize(init);
 Render.type = 'Column';
 function random(min:number,max:number):number{
     min = min || 0;
@@ -447,6 +449,24 @@ function Render(){
         }
     }
 }
+
+
+var mySwipe = Swipe($('#mySwipe')[0],{
+    /*参数未定*/
+});
+$('#mySwipe').click(function(){
+    mySwipe.next();
+})
+$(window).load(function(){
+    $('body').height($(this).innerHeight());
+    $('#mySwipe').animate({
+        'top':$(window).innerHeight()/2-150
+    },1000)
+}).resize(function(){
+    $('#mySwipe').css('top',$(this).innerHeight()/2-150);
+    $('body').height($(this).innerHeight());
+    init();
+});
 
 var music = new Music('mayday',20);
 $('#switch .dropdown-menu').delegate('a','click',function(){
