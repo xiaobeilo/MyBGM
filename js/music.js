@@ -1,5 +1,6 @@
 /// <reference path="jquery.d.ts" />
-var SIZE = 64;
+var SIZE = 128;
+var rang = SIZE;
 var Music = (function () {
     function Music(type, count) {
         this.currentSong = 0;
@@ -350,7 +351,7 @@ function init() {
     $('#mainc').height(winH * 2 / 5).css('top', -winH * 2 / 5);
     HEIGHT = $('#mainc').height();
     WIDTH = $('#mainc').width();
-    SIZE = WIDTH > 768 ? 64 : 32;
+    rang = WIDTH > 768 ? 64 : 16;
     canvas.height = HEIGHT;
     canvas.width = WIDTH;
     getArr();
@@ -367,7 +368,7 @@ function Render() {
     var o = null;
     return function (del, ave) {
         ctx.fillStyle = ARR.linearGradient;
-        var w = Math.round(WIDTH / SIZE), cgap = Math.round(w * 0.3);
+        var w = Math.round(WIDTH / rang), cgap = Math.round(w * 0.3);
         cw = w - cgap;
         ctx.clearRect(0, 0, WIDTH, HEIGHT);
         if (Render.type == 'Dot' && ((del > 3 && ave > 30) || (ave > 50 && del > 0))) {
@@ -381,7 +382,7 @@ function Render() {
                 ctx.stroke();
             }
         }
-        for (var i = 0; i < SIZE; i++) {
+        for (var i = 0; i < rang; i++) {
             o = ARR[i];
             if (Render.type == 'Dot') {
                 var x = o.x, y = o.y, r = Math.round((this[i] / 2 + 18) * (HEIGHT > WIDTH ? WIDTH : HEIGHT) / 600); /*这里省略了移动端的判断*/
@@ -415,13 +416,14 @@ var mySwipe = Swipe($('#mySwipe')[0], {});
 $('#mySwipe').click(function () {
     mySwipe.next();
 });
+var mySwipeH = $('#mySwipe').height();
 $(window).load(function () {
     $('body').height($(this).innerHeight());
     $('#mySwipe').animate({
-        'top': $(window).innerHeight() / 2 - 150
+        'top': $(window).innerHeight() / 2 - mySwipeH * 3 / 4
     }, 1000);
 }).resize(function () {
-    $('#mySwipe').css('top', $(this).innerHeight() / 2 - 150);
+    $('#mySwipe').css('top', $(this).innerHeight() / 2 - mySwipeH * 3 / 4);
     $('body').height($(this).innerHeight());
     init();
 });
