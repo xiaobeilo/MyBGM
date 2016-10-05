@@ -174,7 +174,7 @@ MusicVisualizer.prototype.play = function(path, isMobile/*是否移动设备*/){
 
             self.source = self.audioSource;
 
-            MusicVisualizer.play(self);
+            // MusicVisualizer.play(self);
 
             return;
         }

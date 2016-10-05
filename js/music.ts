@@ -400,6 +400,7 @@ function random(min:number,max:number):number{
 }
 function Render(){
     var o = null;
+    if(isMobile) return ;
     return function(del,ave){
         ctx.fillStyle = ARR.linearGradient;
         var w = Math.round(WIDTH / rang),

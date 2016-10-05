@@ -90,6 +90,21 @@
         <img src="images/bgs/xzz/bg1.jpg" alt="">
         <img src="images/bgs/jay/bg1.jpg" alt="">
     </div>
+    <script>
+        var isMobile = false;
+        var isApple = false;
+        !function(){
+            var u = window.navigator.userAgent;
+            var m = /(Android)|(iPhone)|(iPad)|(iPod)/i;
+            if(m.test(u)){
+                isMobile = true;
+            }
+            var ap = /(iPhone)|(iPad)|(iPod)|(Mac)/i;
+            if(ap.test(u)){
+                isApple = true;
+            }
+        }();
+    </script>
     <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/swipe.min.js"></script>
@@ -97,7 +112,8 @@
     <script src="js/MusicVisualizer.min.js"></script>
     <script src="js/music.js"></script>
     <script>
-        console.log('By:cMing')
+        console.log('MyBlog:www.inmybgm.com');
+        console.log('By:cMing');
     </script>
 </body>
 </html>

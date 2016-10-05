@@ -366,6 +366,8 @@ function random(min, max) {
 }
 function Render() {
     var o = null;
+    if (isMobile)
+        return;
     return function (del, ave) {
         ctx.fillStyle = ARR.linearGradient;
         var w = Math.round(WIDTH / rang), cgap = Math.round(w * 0.3);
