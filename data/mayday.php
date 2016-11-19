@@ -3,8 +3,15 @@
 header('Content-type:application/json');
 
 $mayday = [];
+$mayday[] = ["song_name"=>"后来的我们","artist"=>"五月天","lrc_name"=>"hou_lai_de_wo_men","spe_zh"=>"作品9号","spe_en"=>"ninthWorks","oth_src"=>"http://o9iwtn22r.bkt.clouddn.com/%E5%90%8E%E6%9D%A5%E7%9A%84%E6%88%91%E4%BB%AC-%E4%BA%94%E6%9C%88%E5%A4%A9%20.mp3","qiniu_src"=>"http://o9iwtn22r.bkt.clouddn.com/06.%E5%90%8E%E6%9D%A5%E7%9A%84%E6%88%91%E4%BB%AC-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3"];
+
+$mayday[] =["song_name"=>"如果我们不曾相遇","artist"=>"五月天","lrc_name"=>"ru_guo_wo_men_bu_ceng_xiang_yu","spe_zh"=>"作品9号","spe_en"=>"ninthWorks","oth_src"=>"http://o9iwtn22r.bkt.clouddn.com/%E5%A6%82%E6%9E%9C%E6%88%91%E4%BB%AC%E4%B8%8D%E6%9B%BE%E7%9B%B8%E9%81%87_%E4%BA%94%E6%9C%88%E5%A4%A9.mp3","qiniu_src"=>"http://o9iwtn22r.bkt.clouddn.com/01.%E5%A6%82%E6%9E%9C%E6%88%91%E4%BB%AC%E4%B8%8D%E6%9B%BE%E7%9B%B8%E9%81%87-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3"];
 
 $mayday[] = ["song_name"=>"好好","artist"=>"五月天","lrc_name"=>"hao_hao","spe_zh"=>"自传","spe_en"=>"zi_zhuan","oth_src"=>"http://o9iwtn22r.bkt.clouddn.com/%E5%90%8E%E6%9D%A5%E7%9A%84%E6%88%91%E4%BB%AC-%E4%BA%94%E6%9C%88%E5%A4%A9%20.mp3","qiniu_src"=>"http://o9iwtn22r.bkt.clouddn.com/03.%E5%A5%BD%E5%A5%BD%20%28%E6%83%B3%E6%8A%8A%E4%BD%A0%E5%86%99%E6%88%90%E4%B8%80%E9%A6%96%E6%AD%8C%29-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3"];
+
+$mayday[] = ["song_name"=>"终于结束的起点","artist"=>"五月天","lrc_name"=>"zhong_yu_jie_shu_de_qi_dian","spe_zh"=>"自传","spe_en"=>"zi_zhuan","oth_src"=>"http://o9iwtn22r.bkt.clouddn.com/%E5%90%8E%E6%9D%A5%E7%9A%84%E6%88%91%E4%BB%AC-%E4%BA%94%E6%9C%88%E5%A4%A9%20.mp3","qiniu_src"=>"http://o9iwtn22r.bkt.clouddn.com/11.%E7%BB%88%E4%BA%8E%E7%BB%93%E6%9D%9F%E7%9A%84%E8%B5%B7%E7%82%B9-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3"];
+
+$mayday[] = ["song_name"=>"兄弟","artist"=>"五月天","lrc_name"=>"xiong_di","spe_zh"=>"自传","spe_en"=>"zi_zhuan","oth_src"=>"http://o9iwtn22r.bkt.clouddn.com/%E5%90%8E%E6%9D%A5%E7%9A%84%E6%88%91%E4%BB%AC-%E4%BA%94%E6%9C%88%E5%A4%A9%20.mp3","qiniu_src"=>"http://o9iwtn22r.bkt.clouddn.com/04.%E5%85%84%E5%BC%9F-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3"];
 
 
 $mayday[] = ["song_name"=>"成名在望","artist"=>"五月天","lrc_name"=>"cheng_ming_zai_wang","spe_zh"=>"自传","spe_en"=>"zi_zhuan","oth_src"=>"http://o9iwtn22r.bkt.clouddn.com/%E5%90%8E%E6%9D%A5%E7%9A%84%E6%88%91%E4%BB%AC-%E4%BA%94%E6%9C%88%E5%A4%A9%20.mp3","qiniu_src"=>"http://o9iwtn22r.bkt.clouddn.com/02.%E6%88%90%E5%90%8D%E5%9C%A8%E6%9C%9B-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3"];
@@ -12,12 +19,6 @@ $mayday[] = ["song_name"=>"成名在望","artist"=>"五月天","lrc_name"=>"chen
 $mayday[] = ["song_name"=>"派对动物","artist"=>"五月天","lrc_name"=>"pai_dui_dong_wu","spe_zh"=>"作品9号","spe_en"=>"ninthWorks","oth_src"=>"http://o9iwtn22r.bkt.clouddn.com/%E6%B4%BE%E5%AF%B9%E5%8A%A8%E7%89%A9-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3","qiniu_src"=>"http://o9iwtn22r.bkt.clouddn.com/%E6%B4%BE%E5%AF%B9%E5%8A%A8%E7%89%A9-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3"];
 
 $mayday[] =["song_name"=>"任意门","artist"=>"五月天","lrc_name"=>"ren_yi_men","spe_zh"=>"自传","spe_en"=>"zi_zhuan","oth_src"=>"aaahttp://api.itwusun.com/music/songurl/xm_128_3381901.mp3?sign=5d4da15a9063f7433406b95f1da57819","qiniu_src"=>"http://o9iwtn22r.bkt.clouddn.com/12.%E4%BB%BB%E6%84%8F%E9%97%A8-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3"];
-
-$mayday[] = ["song_name"=>"后来的我们","artist"=>"五月天","lrc_name"=>"hou_lai_de_wo_men","spe_zh"=>"作品9号","spe_en"=>"ninthWorks","oth_src"=>"http://o9iwtn22r.bkt.clouddn.com/%E5%90%8E%E6%9D%A5%E7%9A%84%E6%88%91%E4%BB%AC-%E4%BA%94%E6%9C%88%E5%A4%A9%20.mp3","qiniu_src"=>"http://o9iwtn22r.bkt.clouddn.com/06.%E5%90%8E%E6%9D%A5%E7%9A%84%E6%88%91%E4%BB%AC-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3"];
-
-$mayday[] = ["song_name"=>"终于结束的起点","artist"=>"五月天","lrc_name"=>"zhong_yu_jie_shu_de_qi_dian","spe_zh"=>"自传","spe_en"=>"zi_zhuan","oth_src"=>"http://o9iwtn22r.bkt.clouddn.com/%E5%90%8E%E6%9D%A5%E7%9A%84%E6%88%91%E4%BB%AC-%E4%BA%94%E6%9C%88%E5%A4%A9%20.mp3","qiniu_src"=>"http://o9iwtn22r.bkt.clouddn.com/11.%E7%BB%88%E4%BA%8E%E7%BB%93%E6%9D%9F%E7%9A%84%E8%B5%B7%E7%82%B9-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3"];
-
-$mayday[] =["song_name"=>"如果我们不曾相遇","artist"=>"五月天","lrc_name"=>"ru_guo_wo_men_bu_ceng_xiang_yu","spe_zh"=>"作品9号","spe_en"=>"ninthWorks","oth_src"=>"http://o9iwtn22r.bkt.clouddn.com/%E5%A6%82%E6%9E%9C%E6%88%91%E4%BB%AC%E4%B8%8D%E6%9B%BE%E7%9B%B8%E9%81%87_%E4%BA%94%E6%9C%88%E5%A4%A9.mp3","qiniu_src"=>"http://o9iwtn22r.bkt.clouddn.com/01.%E5%A6%82%E6%9E%9C%E6%88%91%E4%BB%AC%E4%B8%8D%E6%9B%BE%E7%9B%B8%E9%81%87-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3"];
 
 $mayday[] = ["song_name"=>"勇敢","artist"=>"五月天","lrc_name"=>"yong_gan","spe_zh"=>"勇敢","spe_en"=>"yong_gan","oth_src"=>"http://o9iwtn22r.bkt.clouddn.com/%E5%90%8E%E6%9D%A5%E7%9A%84%E6%88%91%E4%BB%AC-%E4%BA%94%E6%9C%88%E5%A4%A9%20.mp3","qiniu_src"=>"http://o9iwtn22r.bkt.clouddn.com/01%20-%20%E5%8B%87%E6%95%A2.mp3"];
 
@@ -31,9 +32,6 @@ $mayday[] = ["song_name"=>"少年他的奇幻漂流","artist"=>"五月天","lrc_
 $mayday[] = ["song_name"=>"转眼","artist"=>"五月天","lrc_name"=>"zhuan_yan","spe_zh"=>"自传","spe_en"=>"zi_zhuan","oth_src"=>"http://o9iwtn22r.bkt.clouddn.com/%E5%90%8E%E6%9D%A5%E7%9A%84%E6%88%91%E4%BB%AC-%E4%BA%94%E6%9C%88%E5%A4%A9%20.mp3","qiniu_src"=>"http://o9iwtn22r.bkt.clouddn.com/13.%E8%BD%AC%E7%9C%BC-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3"];
 
 $mayday[] = ["song_name"=>"你说那C和弦就是..","artist"=>"五月天","lrc_name"=>"ni_shuo_na_c","spe_zh"=>"自传","spe_en"=>"zi_zhuan","oth_src"=>"http://o9iwtn22r.bkt.clouddn.com/%E5%90%8E%E6%9D%A5%E7%9A%84%E6%88%91%E4%BB%AC-%E4%BA%94%E6%9C%88%E5%A4%A9%20.mp3","qiniu_src"=>"http://o9iwtn22r.bkt.clouddn.com/15.%E4%BD%A0%E8%AF%B4%E9%82%A3%20C%20%E5%92%8C%E5%BC%A6%E5%B0%B1%E6%98%AF...-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3"];
-
-
-$mayday[] = ["song_name"=>"兄弟","artist"=>"五月天","lrc_name"=>"xiong_di","spe_zh"=>"自传","spe_en"=>"zi_zhuan","oth_src"=>"http://o9iwtn22r.bkt.clouddn.com/%E5%90%8E%E6%9D%A5%E7%9A%84%E6%88%91%E4%BB%AC-%E4%BA%94%E6%9C%88%E5%A4%A9%20.mp3","qiniu_src"=>"http://o9iwtn22r.bkt.clouddn.com/04.%E5%85%84%E5%BC%9F-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3"];
 
 $mayday[] = ["song_name"=>"人生有限公司","artist"=>"五月天","lrc_name"=>"ren_sheng_you_xian_gong_si","spe_zh"=>"自传","spe_en"=>"zi_zhuan","oth_src"=>"http://o9iwtn22r.bkt.clouddn.com/%E5%90%8E%E6%9D%A5%E7%9A%84%E6%88%91%E4%BB%AC-%E4%BA%94%E6%9C%88%E5%A4%A9%20.mp3","qiniu_src"=>"http://o9iwtn22r.bkt.clouddn.com/05.%E4%BA%BA%E7%94%9F%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3"];
 

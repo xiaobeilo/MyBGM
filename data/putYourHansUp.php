@@ -7,12 +7,11 @@ $putYourHansUp = [];
 
 $putYourHansUp[] =["song_name"=>"Lose Yourself (Markino Faded Remix)","artist"=>"Dj Markino,Alan Walker,Eminem","lrc_name"=>"lose_yourself","spe_zh"=>"","spe_en"=>"faded","oth_src"=>"http://api.itwusun.com/music,/songurl/xm_128_373959.mp3?sign=fd740029edad8f680e2a1d6b7eb407be","qiniu_src"=>"http://oe05zyvh1.bkt.clouddn.com/Dj%20Markino,Alan%20Walker,Eminem%20-%20Lose%20Yourself%20%28Markino%20Faded%20Remix%29.mp3"];
 
-$putYourHansUp[] =["song_name"=>"Bad(live)","artist"=>"低调组合","lrc_name"=>"bad_live","spe_zh"=>"","spe_en"=>"no_spe","oth_src"=>"http://api.itwusun.com/music,/songurl/xm_128_373959.mp3?sign=fd740029edad8f680e2a1d6b7eb407be","qiniu_src"=>"http://oe05zyvh1.bkt.clouddn.com/%E4%BD%8E%E8%B0%83%E7%BB%84%E5%90%88%20-%20Bad%20%28Live%29.mp3"];
-
 $putYourHansUp[] =["song_name"=>"平凡之路(live)","artist"=>"低调组合","lrc_name"=>"ping_fan_zhi_lu","spe_zh"=>"","spe_en"=>"no_spe","oth_src"=>"http://api.itwusun.com/music,/songurl/xm_128_373959.mp3?sign=fd740029edad8f680e2a1d6b7eb407be","qiniu_src"=>"http://oe05zyvh1.bkt.clouddn.com/%E4%BD%8E%E8%B0%83%E7%BB%84%E5%90%88%20-%20%E5%B9%B3%E5%87%A1%E4%B9%8B%E8%B7%AF%20%28Live%29.mp3"];
 
-
 $putYourHansUp[] =["song_name"=>"我的天空 + Rap God(live)","artist"=>"低调组合","lrc_name"=>"wo_de_tian_kong","spe_zh"=>"","spe_en"=>"no_spe","oth_src"=>"http://api.itwusun.com/music,/songurl/xm_128_373959.mp3?sign=fd740029edad8f680e2a1d6b7eb407be","qiniu_src"=>"http://oe05zyvh1.bkt.clouddn.com/%E4%BD%8E%E8%B0%83%E7%BB%84%E5%90%88%20-%20%E6%88%91%E7%9A%84%E5%A4%A9%E7%A9%BA%20+%20Rap%20God%20%28Live%29.mp3"];
+
+$putYourHansUp[] =["song_name"=>"Bad(live)","artist"=>"低调组合","lrc_name"=>"bad_live","spe_zh"=>"","spe_en"=>"no_spe","oth_src"=>"http://api.itwusun.com/music,/songurl/xm_128_373959.mp3?sign=fd740029edad8f680e2a1d6b7eb407be","qiniu_src"=>"http://oe05zyvh1.bkt.clouddn.com/%E4%BD%8E%E8%B0%83%E7%BB%84%E5%90%88%20-%20Bad%20%28Live%29.mp3"];
 
 $putYourHansUp[] =["song_name"=>"Hymn For The Weekend [Remix]","artist"=>"Alan Walker","lrc_name"=>"hymn_for_the_weekend","spe_zh"=>"Hymn For The Weekend","spe_en"=>"hymn_for_the_weekend","oth_src"=>"http://api.itwusun.com/music,/songurl/xm_128_373959.mp3?sign=fd740029edad8f680e2a1d6b7eb407be","qiniu_src"=>"http://oe05zyvh1.bkt.clouddn.com/Alan%20Walker,Coldplay%20-%20Hymn%20For%20The%20Weekend%20%5BRemix%5D.mp3"];
 

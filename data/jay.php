@@ -4,6 +4,23 @@ header('Content-type:application/json');
 
 $jay = [];
 
+$jay[] =["song_name"=>"告白气球","artist"=>"周杰伦","lrc_name"=>"gao_bai_qi_qiu","spe_zh"=>"床边故事","spe_en"=>"chuang_bian_gu_shi","oth_src"=>"http://api.itwusun.com/music,/songurl/xm_128_373959.mp3?sign=fd740029edad8f680e2a1d6b7eb407be","qiniu_src"=>"http://oe03ccyz6.bkt.clouddn.com/08%20-%20%E5%91%8A%E7%99%BD%E6%B0%94%E7%90%83.mp3"];
+
+$jay[] =["song_name"=>"前世情人","artist"=>"周杰伦","lrc_name"=>"qian_shi_qing_ren","spe_zh"=>"床边故事","spe_en"=>"chuang_bian_gu_shi","oth_src"=>"http://api.itwusun.com/music,/songurl/xm_128_373959.mp3?sign=fd740029edad8f680e2a1d6b7eb407be","qiniu_src"=>"http://oe03ccyz6.bkt.clouddn.com/04%20-%20%E5%89%8D%E4%B8%96%E6%83%85%E4%BA%BA.mp3"];
+
+$jay[] =["song_name"=>"爱情废柴","artist"=>"周杰伦","lrc_name"=>"ai_qing_fei_cai","spe_zh"=>"床边故事","spe_en"=>"chuang_bian_gu_shi","oth_src"=>"http://api.itwusun.com/music,/songurl/xm_128_373959.mp3?sign=fd740029edad8f680e2a1d6b7eb407be","qiniu_src"=>"http://oe03ccyz6.bkt.clouddn.com/10%20-%20%E7%88%B1%E6%83%85%E5%BA%9F%E6%9F%B4.mp3"];
+
+$jay[] =["song_name"=>"不该","artist"=>"周杰伦","lrc_name"=>"bu_gai","spe_zh"=>"床边故事","spe_en"=>"chuang_bian_gu_shi","oth_src"=>"http://api.itwusun.com/music,/songurl/xm_128_373959.mp3?sign=fd740029edad8f680e2a1d6b7eb407be","qiniu_src"=>"http://oe03ccyz6.bkt.clouddn.com/06%20-%20%E4%B8%8D%E8%AF%A5%28with%20aMEI%29.mp3"];
+
+$jay[] =["song_name"=>"一点点","artist"=>"周杰伦","lrc_name"=>"yi_dian_dian","spe_zh"=>"床边故事","spe_en"=>"chuang_bian_gu_shi","oth_src"=>"http://api.itwusun.com/music,/songurl/xm_128_373959.mp3?sign=fd740029edad8f680e2a1d6b7eb407be","qiniu_src"=>"http://oe03ccyz6.bkt.clouddn.com/03%20-%20%E4%B8%80%E7%82%B9%E7%82%B9.mp3"];
+
+$jay[] =["song_name"=>"Now You See Me","artist"=>"周杰伦","lrc_name"=>"now_you_see_me","spe_zh"=>"床边故事","spe_en"=>"chuang_bian_gu_shi","oth_src"=>"http://api.itwusun.com/music,/songurl/xm_128_373959.mp3?sign=fd740029edad8f680e2a1d6b7eb407be","qiniu_src"=>"http://oe03ccyz6.bkt.clouddn.com/09%20-%20Now%20You%20See%20Me.mp3"];
+
+$jay[] =["song_name"=>"土耳其冰淇淋","artist"=>"周杰伦","lrc_name"=>"tu_er_qi_bing_qi_lin","spe_zh"=>"床边故事","spe_en"=>"chuang_bian_gu_shi","oth_src"=>"http://api.itwusun.com/music,/songurl/xm_128_373959.mp3?sign=fd740029edad8f680e2a1d6b7eb407be","qiniu_src"=>"http://oe03ccyz6.bkt.clouddn.com/07%20-%20%E5%9C%9F%E8%80%B3%E5%85%B6%E5%86%B0%E6%B7%87%E6%B7%8B.mp3"];
+
+$jay[] =["song_name"=>"说走就走","artist"=>"周杰伦","lrc_name"=>"shuo_zou_jiu_zou","spe_zh"=>"床边故事","spe_en"=>"chuang_bian_gu_shi","oth_src"=>"http://api.itwusun.com/music,/songurl/xm_128_373959.mp3?sign=fd740029edad8f680e2a1d6b7eb407be","qiniu_src"=>"http://oe03ccyz6.bkt.clouddn.com/02%20-%20%E8%AF%B4%E8%B5%B0%E5%B0%B1%E8%B5%B0.mp3"];
+
+
 $jay[] =["song_name"=>"以父之名","artist"=>"周杰伦","lrc_name"=>"yi_fu_zhi_ming","spe_zh"=>"叶惠美","spe_en"=>"ye_hui_mei","oth_src"=>"http://api.itwusun.com/music,/songurl/xm_128_373959.mp3?sign=fd740029edad8f680e2a1d6b7eb407be","qiniu_src"=>"http://oe03ccyz6.bkt.clouddn.com/01%20-%20%E4%BB%A5%E7%88%B6%E4%B9%8B%E5%90%8D.mp3"];
 
 $jay[] =["song_name"=>"可爱女人","artist"=>"周杰伦","lrc_name"=>"ke_ai_nv_ren","spe_zh"=>"jay","spe_en"=>"jay","oth_src"=>"http://api.itwusun.com/music,/songurl/xm_128_373959.mp3?sign=fd740029edad8f680e2a1d6b7eb407be","qiniu_src"=>"http://oe03ccyz6.bkt.clouddn.com/01%20-%20%E5%8F%AF%E7%88%B1%E5%A5%B3%E4%BA%BA.mp3"];
