@@ -79,22 +79,31 @@ var Music = (function () {
     }
     Music.prototype.initList = function () {
         var me = this;
-        $.ajax({
-            type: 'GET',
-            url: 'data/' + this.theme.type + '.php',
-            dataType: 'json',
-            success: function (data) {
-                me.allSongData = data;
-                var template = '';
-                var arr = Array.prototype.slice.apply(me.allSongData);
-                for (var i = 0; i < arr.length; i++) {
-                    template += "\n                    <li data-idx='" + i + "'><a href=\"#\"><i>" + (i + 1) + "</i><span>" + arr[i].song_name + "-" + arr[i].artist + "</span></a></li>\n                  ";
-                }
-                me.list.html(template);
-                me.listLi = $('#m-list li');
-                me.playTo();
-            }
-        });
+        // $.ajax({
+        //     type: 'GET',
+        //     url: 'data/' + this.theme.type + '.php',
+        //     dataType: 'json',
+        //     success: function (data) {
+        //         me.allSongData = data;
+        //         var template = '';
+        //         var arr = Array.prototype.slice.apply(me.allSongData);
+        //         for (var i = 0; i < arr.length; i++) {
+        //             template += "\n                    <li data-idx='" + i + "'><a href=\"#\"><i>" + (i + 1) + "</i><span>" + arr[i].song_name + "-" + arr[i].artist + "</span></a></li>\n                  ";
+        //         }
+        //         me.list.html(template);
+        //         me.listLi = $('#m-list li');
+        //         me.playTo();
+        //     }
+        // });
+        me.allSongData = window[this.theme.type];
+        var template = '';
+        var arr = Array.prototype.slice.apply(me.allSongData);
+        for (var i = 0; i < arr.length; i++) {
+            template += "\n                    <li data-idx='" + i + "'><a href=\"#\"><i>" + (i + 1) + "</i><span>" + arr[i].song_name + "-" + arr[i].artist + "</span></a></li>\n                  ";
+        }
+        me.list.html(template);
+        me.listLi = $('#m-list li');
+        me.playTo();
     };
     Music.prototype.playTo = function (dir) {
         var curIdx = 0;

@@ -1,0 +1,23 @@
+{
+  "name": "mybgm",
+  "version": "1.0.0",
+  "description": "在我的背景音乐里 没人能够打败我",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cMing404/MyBGM.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cMing404/MyBGM/issues"
+  },
+  "homepage": "https://github.com/cMing404/MyBGM#readme",
+  "devDependencies": {
+    "express": "^4.16.3"
+  }
+}
