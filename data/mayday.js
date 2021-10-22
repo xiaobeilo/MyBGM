@@ -8,7 +8,7 @@ var mayday = [
 		oth_src:
 			'https://fz-zion-static.functorz.com/202110231200/e3086e645a6ee47629226add9b3fd22e/project/2000000000001497/videos/vrfEEVJ9wNNcQXh0c3jhog==.mp3',
 		qiniu_src:
-			'http://o9iwtn22r.bkt.clouddn.com/06.%E5%90%8E%E6%9D%A5%E7%9A%84%E6%88%91%E4%BB%AC-%E4%BA%94%E6%9C%88%E5%A4%A9.mp3',
+			'https://fz-zion-static.functorz.com/202110231200/e3086e645a6ee47629226add9b3fd22e/project/2000000000001497/videos/vrfEEVJ9wNNcQXh0c3jhog==.mp3',
 	},
 
 	{
